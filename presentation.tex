@@ -1,26 +1,22 @@
 \documentclass[12pt, a4paper]{article}
-
-% ── Encodage & Langue 
+% ── Encodage & Langue
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
-
-% ── Mise en page 
+% ── Mise en page
 \usepackage[top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm]{geometry}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{\small\sffamily G(n,p) — Détection de Fraude}
+\rhead{\small\sffamily G(n,p) — Détection de Fraude \& Cliques}
 \lhead{\small\sffamily Algorithmes \& Implémentation Python}
 \cfoot{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-
-% ── Typographie 
+% ── Typographie
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{setspace}
-
-% ── Couleurs 
+% ── Couleurs
 \usepackage{xcolor}
 \definecolor{codebg}    {HTML}{1c2128}
 \definecolor{codeframe} {HTML}{30363d}
@@ -37,9 +33,8 @@
 \definecolor{accent}    {HTML}{0366d6}
 \definecolor{warningbg} {HTML}{fff8e1}
 \definecolor{warningborder}{HTML}{f9a825}
-
-% ── Algorithmes 
-\usepackage[vlined, ruled, linesnumbered, algochapter]{algorithm2e}
+% ── Algorithmes
+\usepackage[vlined, ruled, linesnumbered]{algorithm2e}
 \SetAlgoVlined
 \DontPrintSemicolon
 % Mots-clés français
@@ -54,709 +49,487 @@
 \SetKwData{Vrai}{Vrai}
 \SetKwData{Faux}{Faux}
 \newcommand{\com}[1]{\tcc*[r]{\small\textit{#1}}}
-
-% ── Listings Python 
+% ── Listings Python
 \usepackage{listings}
-
 \lstdefinestyle{python}{
-  language         = Python,
-  backgroundcolor  = \color{codebg},
-  basicstyle       = \footnotesize\ttfamily\color{txt_white},
-  keywordstyle     = \color{kw_blue}\bfseries,
-  stringstyle      = \color{kw_yellow},
-  commentstyle     = \color{kw_green}\itshape,
-  numberstyle      = \tiny\color{txt_muted},
-  numbers          = left,
-  numbersep        = 10pt,
-  stepnumber       = 1,
-  frame            = single,
-  framesep         = 6pt,
-  rulecolor        = \color{codeframe},
-  breaklines       = true,
-  showstringspaces = false,
-  tabsize          = 4,
-  captionpos       = b,
-  xleftmargin      = 18pt,
-  xrightmargin     = 4pt,
-  morekeywords     = {self, True, False, None, lambda},
-  emph             = {nx, random, list, set, len, max, min, int, str},
-  emphstyle        = \color{kw_cyan},
-  literate         =
+    language         = Python,
+    backgroundcolor  = \color{codebg},
+    basicstyle       = \footnotesize\ttfamily\color{txt_white},
+    keywordstyle     = \color{kw_blue}\bfseries,
+    stringstyle      = \color{kw_yellow},
+    commentstyle     = \color{kw_green}\itshape,
+    numberstyle      = \tiny\color{txt_muted},
+    numbers          = left,
+    numbersep        = 10pt,
+    stepnumber       = 1,
+    frame            = single,
+    framesep         = 6pt,
+    rulecolor        = \color{codeframe},
+    breaklines       = true,
+    showstringspaces = false,
+    tabsize          = 4,
+    captionpos       = b,
+    xleftmargin      = 18pt,
+    xrightmargin     = 4pt,
+    morekeywords     = {self, True, False, None, lambda, def, return, if, else, elif, for, in, while, import, from, as, class, try, except},
+    emph             = {random, math, sys, list, set, len, max, min, int, str, dict, frozenset, tuple, range, print},
+    emphstyle        = \color{kw_cyan},
+    literate         =
     {é}{{\'{e}}}1 {è}{{\`{e}}}1 {ê}{{\^{e}}}1
     {à}{{\`{a}}}1 {â}{{\^{a}}}1 {î}{{\^{i}}}1
     {ô}{{\^{o}}}1 {ù}{{\`{u}}}1 {É}{{\'{E}}}1
     {È}{{\`{E}}}1 {ç}{{\c{c}}}1 {—}{{---}}1,
 }
 \renewcommand{\lstlistingname}{Code Python}
-
-% ── Boîtes tcolorbox 
+% ── Boîtes tcolorbox
 \usepackage{tcolorbox}
 \tcbuselibrary{breakable, skins, listings}
-
 \tcbset{
-  explication/.style={
-    colback     = algobg,
-    colframe    = algoborder,
-    coltext     = black,
-    fonttitle   = \bfseries\sffamily,
-    title       = {Explication},
-    arc         = 5pt,
-    boxrule     = 0.6pt,
-    left        = 8pt, right = 8pt,
-    top         = 6pt, bottom = 6pt,
-    breakable,
-  },
-  attention/.style={
-    colback     = warningbg,
-    colframe    = warningborder,
-    fonttitle   = \bfseries\sffamily,
-    title       = {Remarque},
-    arc         = 5pt,
-    boxrule     = 0.6pt,
-    breakable,
-  },
+    explication/.style={
+        colback     = algobg,
+        colframe    = algoborder,
+        coltext     = black,
+        fonttitle   = \bfseries\sffamily,
+        title       = {Explication},
+        arc         = 5pt,
+        boxrule     = 0.6pt,
+        left        = 8pt, right = 8pt,
+        top         = 6pt, bottom = 6pt,
+        breakable,
+    },
+    attention/.style={
+        colback     = warningbg,
+        colframe    = warningborder,
+        fonttitle   = \bfseries\sffamily,
+        title       = {Remarque},
+        arc         = 5pt,
+        boxrule     = 0.6pt,
+        breakable,
+    },
 }
-
-% ── Titres 
+% ── Titres
 \usepackage{titlesec}
 \titleformat{\section}
-  {\Large\bfseries\sffamily\color{accent}}
-  {\thesection.}{0.6em}{}
-  [\vspace{-4pt}\textcolor{accent}{\rule{\textwidth}{0.4pt}}]
-
+{\Large\bfseries\sffamily\color{accent}}
+{\thesection.}{0.6em}{}
+[\vspace{-4pt}\textcolor{accent}{\rule{\textwidth}{0.4pt}}]
 \titleformat{\subsection}
-  {\large\bfseries\sffamily\color{accent!80!black}}
-  {\thesubsection}{0.5em}{}
-
+{\large\bfseries\sffamily\color{accent!80!black}}
+{\thesubsection}{0.5em}{}
 \titleformat{\subsubsection}
-  {\normalsize\bfseries\sffamily\color{black!70}}
-  {\thesubsubsection}{0.5em}{}
-
-% ── Mathématiques 
+{\normalsize\bfseries\sffamily\color{black!70}}
+{\thesubsubsection}{0.5em}{}
+% ── Mathématiques
 \usepackage{amsmath, amssymb}
-
-% ── Graphiques 
+% ── Graphiques
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, shapes.geometric, positioning, fit}
-
-% ── Liens ────────────────
+% ── Liens
 \usepackage{hyperref}
 \hypersetup{
-  colorlinks  = true,
-  linkcolor   = accent,
-  urlcolor    = accent,
-  pdftitle    = {G(n,p) — Algorithmes de détection de fraude},
-  pdfauthor   = {},
+    colorlinks  = true,
+    linkcolor   = accent,
+    urlcolor    = accent,
+    pdftitle    = {G(n,p) — Algorithmes de détection de fraude},
+    pdfauthor   = {Jeremi Richan Tossy RATODISOA},
 }
-
-% ── Table des matières 
+% ── Table des matières
 \usepackage{tocloft}
 \renewcommand{\cftsecfont}{\sffamily\bfseries}
 \renewcommand{\cftsubsecfont}{\sffamily}
 
-
 \begin{document}
 
-% ── Page de titre 
+% ── Page de titre
 \begin{titlepage}
-  \centering
-  \vspace*{1.5cm}
-
-  % Bandeau sombre en haut
-  \begin{tikzpicture}
-    \fill[color=black!90, rounded corners=8pt]
-      (0,0) rectangle (\textwidth, 2.8cm);
-    \node[white, font=\Huge\bfseries\sffamily] at (0.5\textwidth, 1.6cm)
-      {G(n,\;p) — Détection de Fraude};
-    \node[white!70, font=\large\sffamily] at (0.5\textwidth, 0.7cm)
-      {Explication des Algorithmes et Implémentation Python};
-  \end{tikzpicture}
-
-  \vspace{1.5cm}
-
-  % Schéma du flux réseau commercial
-  \begin{tikzpicture}[
-    role/.style={
-      circle, draw=algoborder, fill=algobg, line width=1pt,
-      minimum size=1.4cm, font=\small\sffamily\bfseries
-    },
-    susp/.style={
-      diamond, draw=warningborder, fill=warningbg, line width=1pt,
-      minimum size=1.4cm, font=\small\sffamily\bfseries
-    },
-    fledge/.style={-Stealth, thick, gray!70, line width=0.8pt},
-    fraud/.style={-Stealth, thick, orange!80!red, dashed, line width=1.2pt},
-  ]
-    \node[role]  (A)  at (0,0)    {\textcolor{green!50!black}{Appro.}};
-    \node[role]  (F)  at (3.5,0)  {\textcolor{blue!70!black}{Fourn.}};
-    \node[role]  (C)  at (7,0)    {\textcolor{red!70!black}{Cons.}};
-    \node[susp]  (S)  at (3.5,-2.5) {\textcolor{orange!70!black}{Susp.}};
-
-    \draw[fledge] (A) -- node[above,font=\footnotesize\sffamily,gray]{flux normal} (F);
-    \draw[fledge] (F) -- node[above,font=\footnotesize\sffamily,gray]{flux normal} (C);
-    \draw[fraud]  (A) to[bend right=25] node[below,font=\footnotesize\sffamily,red]
-                    {circuit frauduleux} (C);
-    \draw[fledge] (S) -- (F);
-    \draw[fledge] (S) -- (A);
-  \end{tikzpicture}
-
-  \vspace{1.5cm}
-
-  {\large\sffamily\bfseries Algorithmes couverts}\par
-  \vspace{0.4cm}
-
-  \begin{tabular}{cl}
-    \textcolor{accent}{\bfseries 1.} & Génération du graphe G(n,p) — Modèle Erdős–Rényi \\[4pt]
-    \textcolor{accent}{\bfseries 2.} & Garantie de connexité — BFS et fusion de composantes \\[4pt]
-    \textcolor{accent}{\bfseries 3.} & Coloration gloutonne \\[4pt]
-    \textcolor{accent}{\bfseries 4.} & Assignation des rôles aux nœuds \\[4pt]
-    \textcolor{accent}{\bfseries 5.} & Détection de fraude \\[4pt]
-    \textcolor{accent}{\bfseries 6.} & Animation progressive \\
-  \end{tabular}
-
-  \vfill
-  {\sffamily\color{gray!60}
-    Graphe aléatoire connexe · non orienté · sans boucle \\
-    \medskip
-    $p = 0{,}10$ (fixe) \quad — \quad défaut : $n = 50$
-  }
+    \centering
+    \vspace*{1.5cm}
+    % Bandeau sombre en haut
+    \begin{tikzpicture}
+        \fill[color=black!90, rounded corners=8pt]
+        (0,0) rectangle (\textwidth, 2.8cm);
+        \node[white, font=\Huge\bfseries\sffamily] at (0.5\textwidth, 1.6cm)
+        {G(n,\;p) — Détection de Fraude};
+        \node[white!70, font=\large\sffamily] at (0.5\textwidth, 0.7cm)
+        {Probabilité Adaptative \& Analyse des Cliques};
+    \end{tikzpicture}
+    
+    \vspace{1.5cm}
+    
+    % Schéma du flux réseau commercial
+    \begin{tikzpicture}[
+        role/.style={
+            circle, draw=algoborder, fill=algobg, line width=1pt,
+            minimum size=1.4cm, font=\small\sffamily\bfseries
+        },
+        susp/.style={
+            diamond, draw=warningborder, fill=warningbg, line width=1pt,
+            minimum size=1.4cm, font=\small\sffamily\bfseries
+        },
+        fledge/.style={-Stealth, thick, gray!70, line width=0.8pt},
+        fraud/.style={-Stealth, thick, orange!80!red, dashed, line width=1.2pt},
+        ]
+        \node[role]  (A)  at (0,0)    {\textcolor{green!50!black}{Appro.}};
+        \node[role]  (F)  at (3.5,0)  {\textcolor{blue!70!black}{Fourn.}};
+        \node[role]  (C)  at (7,0)    {\textcolor{red!70!black}{Cons.}};
+        \node[susp]  (S)  at (3.5,-2.5) {\textcolor{orange!70!black}{Susp.}};
+        
+        \draw[fledge] (A) -- node[above,font=\footnotesize\sffamily,gray]{flux normal} (F);
+        \draw[fledge] (F) -- node[above,font=\footnotesize\sffamily,gray]{flux normal} (C);
+        \draw[fraud]  (A) to[bend right=25] node[below,font=\footnotesize\sffamily,red]
+        {circuit frauduleux} (C);
+        \draw[fledge] (S) -- (F);
+        \draw[fledge] (S) -- (A);
+    \end{tikzpicture}
+    
+    \vspace{1.5cm}
+    
+    {\large\sffamily\bfseries Algorithmes couverts}\par
+    \vspace{0.4cm}
+    \begin{tabular}{cl}
+        \textcolor{accent}{\bfseries 1.} & Probabilité adaptative $p(n)$ \\[4pt]
+        \textcolor{accent}{\bfseries 2.} & Génération du graphe G(n, p) \\[4pt]
+        \textcolor{accent}{\bfseries 3.} & BFS — Parcours en largeur \\[4pt]
+        \textcolor{accent}{\bfseries 4.} & Garantie de connexité — Fusion de composantes \\[4pt]
+        \textcolor{accent}{\bfseries 5.} & Coloration gloutonne (Welsh-Powell) \\[4pt]
+        \textcolor{accent}{\bfseries 6.} & Recherche de Cliques (Bron-Kerbosch avec Pivot) \\[4pt]
+        \textcolor{accent}{\bfseries 7.} & Détection de fraude (Rôles \& Structures) \\[4pt]
+        \textcolor{accent}{\bfseries 8.} & Disposition aléatoire contrôlée \\
+    \end{tabular}
+    
+    \vfill
+    
+    {\sffamily\color{gray!60}
+        Graphe aléatoire connexe · non orienté · sans boucle \\
+        \medskip
+        Positions aléatoires · Focus sur les cliques maximales
+    }
 \end{titlepage}
 
-% ── Table des matières ─────────────────────────────────────────────────────────
+% ── Table des matières
 \tableofcontents
 \newpage
 
-
-\section{Génération du Graphe G(n, p) — Modèle Erdős–Rényi}
-
+\section{Probabilité Adaptative}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-Le modèle \textbf{Erdős–Rényi G(n, p)} génère aléatoirement un graphe non orienté
-de $n$ nœuds. Pour \textbf{chaque paire} de nœuds distincts $(i,\, j)$ avec $i < j$,
-on tire un réel aléatoire $r \in [0,1]$ selon une loi uniforme :
-\[
-  (i,j) \in E \iff r \leq p
-\]
-La contrainte $i < j$ garantit l'absence de boucles ($i \neq j$) et
-la non-duplication des arêtes (non orienté).
-
-\medskip
-\textbf{Propriétés attendues :}
-\begin{itemize}
-  \item Nombre moyen d'arêtes : $\displaystyle\mathbb{E}[|E|] = \binom{n}{2}\cdot p = \frac{n(n-1)}{2}\cdot p$
-  \item Pour $n=50$, $p=0{,}10$ : environ $\mathbf{122}$ arêtes.
-  \item Le graphe peut être non connexe — ce sera traité par l'algorithme 2.
-\end{itemize}
+    La probabilité $p$ n'est pas fixe. Elle est calculée dynamiquement selon la taille $n$ du graphe pour garantir la connexité tout en restant sparse, basée sur le seuil d'Erdős-Rényi $\frac{\ln n}{n}$.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
 \begin{algorithm}[H]
-\caption{Génération G(n, p) — Erdős–Rényi}
-\KwIn{$n \in \mathbb{N}^*$ : nombre de nœuds,\quad $p \in [0,1]$ : probabilité}
-\KwOut{$G$ : graphe non orienté, sans boucle}
-\BlankLine
-$G \leftarrow$ graphe vide avec les sommets $\{0, 1, \ldots, n-1\}$\;
-\Pour{$i \leftarrow 0$ \textbf{ à } $n - 2$}{
-    \Pour{$j \leftarrow i + 1$ \textbf{ à } $n - 1$}{
-        $r \leftarrow \mathcal{U}(0,\;1)$ \com{tirage uniforme dans $[0,1]$}
-        \Si{$r \leq p$}{
-            Ajouter l'arête $(i,\; j)$ à $G$\;
-        }
-    }
-}
-\Retourner $G$\;
+    \caption{Calcul adaptatif de p(n)}
+    \KwIn{$n$ : nombre de sommets}
+    \KwOut{$p \in (0, 1]$ : probabilité adaptée}
+    \Si{$n \leq 1$}{\Retourner $0{,}0$\;}
+    \Si{$n \leq 10$}{\Retourner $0{,}60$\;}
+    \Si{$n \leq 30$}{\Retourner $0{,}40$\;}
+    $\mathit{seuil} \leftarrow \dfrac{\ln n}{n}$\;
+    \Si{$n \leq 100$}{\Retourner $\min(1,\; 1{,}5 \times \mathit{seuil})$\;}
+    \Si{$n \leq 500$}{\Retourner $\min(1,\; 2{,}0 \times \mathit{seuil})$\;}
+    \Retourner $\min(1,\; 2{,}5 \times \mathit{seuil})$\;
 \end{algorithm}
 
 \subsection{Code Python}
-
-\begin{lstlisting}[style=python,
-  caption={Génération du graphe — méthode \texttt{\_generate()}}]
-def _generate(self, n: int) -> None:
-    # Génération G(n, p) — modèle Erdos-Renyi
-    # NetworkX parcourt toutes les paires (i,j) avec i < j
-    # et ajoute chaque arête avec probabilité self.P = 0.10
-    G = nx.erdos_renyi_graph(n, self.P)
+\begin{lstlisting}[style=python, caption={calculer\_probabilite(n)}]
+def calculer_probabilite(n: int) -> float:
+    if n <= 1:
+        return 0.0
+    if n <= 10:
+        return 0.60
+    if n <= 30:
+        return 0.40
+    seuil = math.log(n) / n
+    if n <= 100:
+        return round(min(1.0, 1.5 * seuil), 4)
+    if n <= 500:
+        return round(min(1.0, 2.0 * seuil), 4)
+    return round(min(1.0, 2.5 * seuil), 4)
 \end{lstlisting}
 
-\begin{tcolorbox}[attention]
-\texttt{nx.erdos\_renyi\_graph(n, p)} implémente exactement l'algorithme ci-dessus.
-La bibliothèque garantit l'absence de boucles et la non-orientation du graphe.
-\end{tcolorbox}
-
-
-\section{Garantie de Connexité — BFS et Fusion de Composantes}
-
+\section{Génération du Graphe G(n, p)}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-Un graphe G(n,p) n'est pas toujours connexe. La connexité est garantie pour
-$p \geq \frac{\ln n}{n}$, mais pour $p = 0{,}10$ et $n$ petit, des nœuds
-peuvent rester isolés.
-
-\medskip
-\textbf{Stratégie en deux étapes :}
-\begin{enumerate}
-  \item \textbf{BFS (Breadth-First Search)} : parcours en largeur depuis
-        chaque nœud non visité pour identifier les \emph{composantes connexes}.
-  \item \textbf{Fusion} : tant qu'il y a plus d'une composante, on choisit
-        un nœud aléatoire dans chacune des deux premières et on les relie
-        par une nouvelle arête.
-\end{enumerate}
-
-\medskip
-Au plus $k-1$ arêtes sont ajoutées pour $k$ composantes initiales.
+    Le modèle \textbf{Erdős–Rényi G(n, p)} génère aléatoirement un graphe non orienté de $n$ nœuds. Pour chaque paire $(i, j)$ avec $i < j$, une arête est ajoutée si un tirage aléatoire est inférieur ou égal à $p$.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
-\subsubsection*{Étape A — BFS : trouver les composantes connexes}
-
 \begin{algorithm}[H]
-\caption{BFS — Identification des composantes connexes}
-\KwIn{$G$ : graphe, $n$ : nombre de nœuds}
-\KwOut{$\mathit{composantes}$ : liste de listes de nœuds}
-\BlankLine
-$\mathit{visité}[v] \leftarrow \Faux$ pour tout $v \in \{0, \ldots, n-1\}$\;
-$\mathit{composantes} \leftarrow [\;]$\;
-\Pour{$s \leftarrow 0$ \textbf{ à } $n - 1$}{
-    \Si{$\mathit{visité}[s] = \Faux$}{
-        $c \leftarrow [\;]$ \com{nœuds de la composante courante}
-        $\mathit{file} \leftarrow [s]$\;
-        $\mathit{visité}[s] \leftarrow \Vrai$\;
-        \TantQue{$\mathit{file} \neq \varnothing$}{
-            $u \leftarrow$ \textsc{Défiler}($\mathit{file}$)\;
-            Ajouter $u$ à $c$\;
-            \Pour{chaque voisin $v$ de $u$ dans $G$}{
-                \Si{$\mathit{visité}[v] = \Faux$}{
-                    $\mathit{visité}[v] \leftarrow \Vrai$\;
-                    \textsc{Enfiler}($v$,\; $\mathit{file}$)\;
-                }
+    \caption{Génération G(n, p)}
+    \KwIn{$n \in \mathbb{N}^*$, $p \in [0,1]$}
+    \KwOut{$G$ : graphe non orienté}
+    $G \leftarrow$ graphe vide avec les sommets $\{0, \ldots, n-1\}$\;
+    \Pour{$i \leftarrow 0$ \textbf{ à } $n - 2$}{
+        \Pour{$j \leftarrow i + 1$ \textbf{ à } $n - 1$}{
+            \Si{$\mathcal{U}(0,1) \leq p$}{
+                Ajouter l'arête $(i, j)$ à $G$\;
             }
         }
-        Ajouter $c$ à $\mathit{composantes}$\;
     }
-}
-\Retourner $\mathit{composantes}$\;
-\end{algorithm}
-
-\subsubsection*{Étape B — Fusion des composantes}
-
-\begin{algorithm}[H]
-\caption{Fusion — Garantie de connexité du graphe}
-\KwIn{$G$ : graphe, $\mathit{composantes}$ : liste des composantes}
-\KwOut{$G$ : graphe connexe}
-\BlankLine
-\TantQue{$|\mathit{composantes}| > 1$}{
-    $c_1 \leftarrow \mathit{composantes}[0]$ \com{première composante}
-    $c_2 \leftarrow \mathit{composantes}[1]$ \com{deuxième composante}
-    $u \leftarrow$ \textsc{ChoixAléatoire}$(c_1)$\;
-    $v \leftarrow$ \textsc{ChoixAléatoire}$(c_2)$\;
-    Ajouter l'arête $(u,\; v)$ à $G$\;
-    \com{Recalculer les composantes après ajout}
-    $\mathit{composantes} \leftarrow$ \textsc{BFS}$(G)$\;
-}
-\Retourner $G$\;
+    \Retourner $G$\;
 \end{algorithm}
 
 \subsection{Code Python}
-
-\begin{lstlisting}[style=python,
-  caption={Garantie de connexité — méthode \texttt{\_generate()}}]
-# Étape A : BFS via NetworkX pour trouver les composantes
-components = list(nx.connected_components(G))
-
-# Étape B : fusion des composantes jusqu'a connexité totale
-while len(components) > 1:
-    c1 = list(components[0])   # premiere composante
-    c2 = list(components[1])   # deuxième composante
-    # Relier un noeud aléatoire de c1 a un noeud aléatoire de c2
-    G.add_edge(random.choice(c1), random.choice(c2))
-    # Recalculer les composantes apres l'ajout de l'arête
-    components = list(nx.connected_components(G))
+\begin{lstlisting}[style=python, caption={generer\_graphe(n, p)}]
+def generer_graphe(n: int, p: float) -> dict:
+    graphe = {i: set() for i in range(n)}
+    for i in range(n):
+        for j in range(i + 1, n):
+            if random.random() <= p:
+                graphe[i].add(j)
+                graphe[j].add(i)
+    return graphe
 \end{lstlisting}
 
-
-\section{Coloration Gloutonne du Graphe}
-
+\section{BFS — Parcours en Largeur}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-La \textbf{coloration de graphe} attribue un entier (couleur) à chaque nœud
-de façon que \textbf{deux nœuds adjacents n'aient jamais la même couleur}.
-Formellement, une $k$-coloration valide est une fonction :
-\[
-  f : V \to \{0, 1, \ldots, k-1\} \quad \text{tel que} \quad
-  \forall (u,v) \in E,\; f(u) \neq f(v)
-\]
-
-\medskip
-L'\textbf{algorithme glouton} (\textit{Greedy Coloring}) avec la stratégie
-\textit{largest\_first} (nœuds de degré le plus élevé traités en premier) :
-\begin{enumerate}
-  \item Trie les nœuds par degré décroissant.
-  \item Pour chaque nœud $v$, collecte les couleurs déjà utilisées par
-        ses voisins déjà colorés.
-  \item Attribue la \textbf{plus petite couleur disponible} non utilisée.
-\end{enumerate}
-
-\medskip
-L'algorithme ne garantit pas le nombre chromatique optimal, mais produit
-une coloration valide efficacement en $O(n + |E|)$.
+    Le BFS explore le graphe niveau par niveau depuis un sommet de départ. Il est utilisé ici pour identifier les composantes connexes.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
 \begin{algorithm}[H]
-\caption{Coloration gloutonne — \textit{Greedy Coloring}}
-\KwIn{$G=(V,E)$ : graphe connexe}
-\KwOut{$\mathit{couleur}$ : $V \to \mathbb{N}$, coloration valide}
-\BlankLine
-Trier $V$ par degré décroissant $\rightarrow$ ordre $[v_0, v_1, \ldots, v_{n-1}]$\;
-\Pour{chaque sommet $v \in V$}{
-    $\mathit{couleur}[v] \leftarrow -1$ \com{non coloré}
-}
-\Pour{chaque sommet $v$ dans l'ordre trié}{
-    \com{Collecter les couleurs des voisins déjà colorés}
-    $\mathit{utilisées} \leftarrow
-    \bigl\{\mathit{couleur}[u] \;\big|\; u \in \mathcal{N}(v),\;
-    \mathit{couleur}[u] \geq 0\bigr\}$\;
-    $c \leftarrow 0$\;
-    \TantQue{$c \in \mathit{utilisées}$}{
-        $c \leftarrow c + 1$ \com{chercher la prochaine couleur libre}
+    \caption{BFS — Parcours en largeur}
+    \KwIn{$G=(V,E)$, $s$ : sommet de départ}
+    \KwOut{$\mathit{visites}$ : ensemble des sommets atteignables}
+    $\mathit{visites} \leftarrow \{s\}$ ; $\mathit{file} \leftarrow [s]$ ; $\mathit{tete} \leftarrow 0$\;
+    \TantQue{$\mathit{tete} < |\mathit{file}|$}{
+        $v \leftarrow \mathit{file}[\mathit{tete}]$ ; $\mathit{tete} \leftarrow \mathit{tete} + 1$\;
+        \Pour{chaque voisin $w$ de $v$}{
+            \Si{$w \notin \mathit{visites}$}{
+                $\mathit{visites} \leftarrow \mathit{visites} \cup \{w\}$ ;
+                $\mathit{file} \leftarrow \mathit{file} + [w]$\;
+            }
+        }
     }
-    $\mathit{couleur}[v] \leftarrow c$\;
-}
-\Retourner $\mathit{couleur}$\;
+    \Retourner $\mathit{visites}$\;
 \end{algorithm}
 
 \subsection{Code Python}
-
-\begin{lstlisting}[style=python,
-  caption={Coloration gloutonne — méthode \texttt{\_generate()}}]
-# Coloration gloutonne : noeuds de plus fort degré traités en premier
-coloring = nx.greedy_color(G, strategy='largest_first')
-
-# Nombre chromatique : plus grande couleur attribuée + 1
-self.n_colors = max(coloring.values()) + 1 if coloring else 1
+\begin{lstlisting}[style=python, caption={bfs(graphe, depart)}]
+def bfs(graphe: dict, depart: int) -> set:
+    visites = {depart}
+    file = [depart]
+    tete = 0
+    while tete < len(file):
+        sommet = file[tete]
+        tete += 1
+        for voisin in graphe[sommet]:
+            if voisin not in visites:
+                visites.add(voisin)
+                file.append(voisin)
+    return visites
 \end{lstlisting}
 
-\begin{tcolorbox}[attention]
-\texttt{coloring} est un dictionnaire \texttt{\{nœud: couleur\_entière\}}.
-La stratégie \texttt{'largest\_first'} est utilisée pour la génération initiale.
-Lors d'une recoloration, d'autres stratégies sont disponibles :
-\texttt{'random\_sequential'}, \texttt{'smallest\_last'}, \texttt{'DSATUR'}.
-\end{tcolorbox}
-
-
-\section{Assignation des Rôles aux Nœuds}
-
+\section{Connexité — Garantie et Composantes}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-Après la coloration, chaque couleur entière est \textbf{mappée à un rôle}
-du réseau commercial. La couleur est \textbf{plafonnée à 3} : tout nœud
-nécessitant une 4\up{e} couleur (ou plus) est automatiquement classé comme
-\emph{suspect}, car il brise la structure 3-rôles normale.
-
-\medskip
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{c|c|c|c}
-  \hline
-  \textbf{Couleur} & \textbf{Rôle} & \textbf{Forme} & \textbf{Couleur graphe}\\
-  \hline
-  0 & Consommateur    & \Large●\ cercle   & \textcolor{red!70!black}{\textbf{rouge}} \\
-  1 & Fournisseur     & \Large■\ carré    & \textcolor{blue!60!black}{\textbf{bleu}} \\
-  2 & Approvisionneur & \Large▲\ triangle & \textcolor{green!60!black}{\textbf{vert}} \\
-  $\geq 3$ & Suspect / Fraude & \Large◆\ losange & \textcolor{orange!80!black}{\textbf{orange}} \\
-  \hline
-\end{tabular}
-\end{center}
-
-\medskip
-La contrainte de coloration garantit que \textbf{deux nœuds voisins ont
-toujours des rôles différents} — ce qui est cohérent avec la séparation
-des acteurs dans un réseau commercial réel.
+    L'algorithme identifie toutes les composantes connexes via des BFS successifs, puis relie les composantes deux à deux par une arête aléatoire jusqu'à obtenir un graphe unique connexe.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
 \begin{algorithm}[H]
-\caption{Assignation des rôles par la coloration}
-\KwIn{$\mathit{coloring}$ : dictionnaire $\{$nœud $\to$ couleur$\}$}
-\KwOut{$\mathit{roles}$ : dictionnaire $\{$nœud $\to$ rôle $\in \{0,1,2,3\}\}$}
-\BlankLine
-\Pour{chaque nœud $v$ dans $\mathit{coloring}$}{
-    \Si{$\mathit{coloring}[v] \leq 2$}{
-        $\mathit{roles}[v] \leftarrow \mathit{coloring}[v]$
-        \com{couleur 0, 1 ou 2 = rôle direct}
+    \caption{Garantie de connexité}
+    \KwIn{$G$ : graphe potentiellement non connexe}
+    \KwOut{$G$ : graphe connexe}
+    $\mathit{composantes} \leftarrow$ TrouverComposantesConnexes($G$)\;
+    \TantQue{$|\mathit{composantes}| > 1$}{
+        $c_1 \leftarrow \mathit{composantes}[0]$ ; $c_2 \leftarrow \mathit{composantes}[1]$\;
+        $u \leftarrow$ \textsc{ChoixAléatoire}$(c_1)$\;
+        $v \leftarrow$ \textsc{ChoixAléatoire}$(c_2)$\;
+        Ajouter l'arête $(u, v)$ à $G$\;
+        $\mathit{composantes} \leftarrow$ TrouverComposantesConnexes($G$)\;
     }
-    \Sinon{
-        $\mathit{roles}[v] \leftarrow 3$
-        \com{couleur $\geq$ 3 → suspect, hors structure}
-    }
-}
-\Retourner $\mathit{roles}$\;
+    \Retourner $G$\;
 \end{algorithm}
 
 \subsection{Code Python}
-
-\begin{lstlisting}[style=python,
-  caption={Assignation des rôles — méthode \texttt{\_generate()}}]
-# Mappage couleur -> role avec plafonnement à 3 pour les suspects
-# min(col, 3) : toute couleur >= 3 devient le role "Suspect/Fraude"
-self.node_roles = {nd: min(col, 3) for nd, col in coloring.items()}
+\begin{lstlisting}[style=python, caption={rendre\_connexe(graphe)}]
+def rendre_connexe(graphe: dict) -> None:
+    composantes = composantes_connexes(graphe)
+    while len(composantes) > 1:
+        s1 = random.choice(list(composantes[0]))
+        s2 = random.choice(list(composantes[1]))
+        graphe[s1].add(s2)
+        graphe[s2].add(s1)
+        composantes = composantes_connexes(graphe)
 \end{lstlisting}
 
-
-\section{Détection de Fraude}
-
+\section{Coloration Gloutonne — Welsh-Powell}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-Dans un réseau commercial sain, le flux suit obligatoirement la chaîne :
-\[
-  \underbrace{\textbf{Approvisionneur}}_{\text{source}}
-  \;\longrightarrow\;
-  \underbrace{\textbf{Fournisseur}}_{\text{intermédiaire}}
-  \;\longrightarrow\;
-  \underbrace{\textbf{Consommateur}}_{\text{destination}}
-\]
-Un \textbf{circuit frauduleux} est identifié selon deux critères :
-
-\medskip
-\textbf{Critère 1 — Liaison directe interdite :}
-Une arête entre un \emph{Consommateur} (rôle 0) et un \emph{Approvisionneur}
-(rôle 2) \textbf{sans passer par un Fournisseur} signale un circuit court suspect
-(ex. : contournement des intermédiaires légaux, évasion fiscale).
-
-\medskip
-\textbf{Critère 2 — Nœud hors structure :}
-Tout nœud ayant nécessité une couleur $\geq 3$ lors de la coloration
-\textbf{ne s'intègre pas} dans la structure 3-rôles normale.
-Il est automatiquement marqué suspect.
+    La coloration gloutonne assigne à chaque sommet la plus petite couleur non utilisée par ses voisins. Les sommets sont triés par degré décroissant (Welsh-Powell) pour optimiser le nombre de couleurs.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
 \begin{algorithm}[H]
-\caption{Détection des circuits frauduleux}
-\KwIn{$G=(V,E)$, $\mathit{roles}[v]$ : rôle de chaque nœud, $\mathit{coloring}[v]$ : couleur}
-\KwOut{$\mathit{fraud\_nodes} \subseteq V$,\quad $\mathit{fraud\_edges} \subseteq E$}
-\BlankLine
-$\mathit{fraud\_nodes} \leftarrow \varnothing$\;
-$\mathit{fraud\_edges} \leftarrow \varnothing$\;
-\BlankLine
-\com{Critère 1 : arête directe Consommateur (0) \textleftrightarrow\ Approvisionneur (2)}
-\Pour{chaque arête $(u,\; v) \in E$}{
-    $r_u \leftarrow \mathit{roles}[u]$,\quad $r_v \leftarrow \mathit{roles}[v]$\;
-    \Si{$(r_u = 0\; \Et\; r_v = 2)$  \Ou  $(r_u = 2\; \Et\; r_v = 0)$}{
-        Ajouter $(u,\; v)$ à $\mathit{fraud\_edges}$\;
-        Ajouter $u$ et $v$ à $\mathit{fraud\_nodes}$\;
+    \caption{Coloration gloutonne Welsh-Powell}
+    \KwIn{$G=(V,E)$}
+    \KwOut{$\mathit{couleur}[v]$ pour tout $v \in V$}
+    $\mathit{ordre} \leftarrow$ trier $V$ par degré décroissant\;
+    $\mathit{couleur} \leftarrow \{\}$\;
+    \Pour{chaque sommet $v$ dans $\mathit{ordre}$}{
+        $C_{\text{voisins}} \leftarrow \{ \mathit{couleur}[w] \mid w \in N(v), w \in \mathit{couleur} \}$\;
+        $c \leftarrow 0$\;
+        \TantQue{$c \in C_{\text{voisins}}$}{$c \leftarrow c + 1$\;}
+        $\mathit{couleur}[v] \leftarrow c$\;
     }
-}
-\BlankLine
-\com{Critère 2 : nœud nécessitant une couleur $\geq$ 3}
-\Pour{chaque nœud $v \in V$}{
-    \Si{$\mathit{coloring}[v] > 2$}{
-        Ajouter $v$ à $\mathit{fraud\_nodes}$\;
-    }
-}
-\BlankLine
-\Retourner $\mathit{fraud\_nodes}$,\; $\mathit{fraud\_edges}$\;
+    \Retourner $\mathit{couleur}$\;
 \end{algorithm}
 
 \subsection{Code Python}
-
-\begin{lstlisting}[style=python,
-  caption={Détection de fraude — méthode \texttt{\_generate()}}]
-# Initialisation des ensembles suspects
-self.fraud_nodes     = set()
-self.fraud_edges_set = set()
-
-# Critère 1 : liaison directe Consommateur(0) <-> Approvisionneur(2)
-for u, v in G.edges():
-    ru, rv = self.node_roles[u], self.node_roles[v]
-    if (ru == 0 and rv == 2) or (ru == 2 and rv == 0):
-        # Stocker l'arête sous forme canonique min(u,v) < max(u,v)
-        self.fraud_edges_set.add((min(u, v), max(u, v)))
-        self.fraud_nodes.update([u, v])
-
-# Critère 2 : noeud hors structure (couleur >= 3)
-for nd, col in coloring.items():
-    if col > 2:
-        self.fraud_nodes.add(nd)
+\begin{lstlisting}[style=python, caption={colorier(graphe)}]
+def colorier(graphe: dict) -> dict:
+    ordre = sorted(graphe, key=lambda s: len(graphe[s]), reverse=True)
+    couleur = {}
+    for sommet in ordre:
+        couleurs_voisins = {couleur[v] for v in graphe[sommet] if v in couleur}
+        c = 0
+        while c in couleurs_voisins:
+            c += 1
+        couleur[sommet] = c
+    return couleur
 \end{lstlisting}
 
-
-\section{Animation Progressive du Graphe}
-
+\section{Cliques — Algorithme de Bron-Kerbosch}
 \subsection{Explication}
-
 \begin{tcolorbox}[explication]
-L'animation décompose la construction du graphe en \textbf{4 phases séquentielles},
-planifiées avec \texttt{root.after(délai, fonction)} — mécanisme \emph{non bloquant}
-de Tkinter qui n'interrompt pas l'interface graphique.
-
-\medskip
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{c|l|c|c}
-  \hline
-  \textbf{Phase} & \textbf{Action} & \textbf{Délai} & \textbf{Nb trames}\\
-  \hline
-  1 & Ajout des nœuds (gris)     & 55 ms & $\lceil n/20 \rceil$ \\
-  2 & Ajout des arêtes (grises)  & 35 ms & $\lceil |E|/15 \rceil$ \\
-  3 & Coloration des rôles       & 750 ms & 1 \\
-  4 & Mise en évidence des fraudes & — & 1 \\
-  \hline
-\end{tabular}
-\end{center}
-
-\medskip
-Les nœuds et arêtes sont ajoutés par \textbf{lots} (\textit{batches}) pour éviter
-trop de redessins : $b_n = \lfloor n/20 \rfloor$ nœuds par trame,
-$b_e = \lfloor |E|/15 \rfloor$ arêtes par trame.
+    L'algorithme de Bron-Kerbosch énumère toutes les cliques maximales par backtracking. Une optimisation par \textbf{pivot} est utilisée pour réduire le nombre d'appels récursifs. Seules les cliques de taille $\geq 3$ sont retenues.
 \end{tcolorbox}
 
 \subsection{Algorithme}
-
 \begin{algorithm}[H]
-\caption{Animation progressive — Fonction récursive par étapes}
-\KwIn{$\mathit{noeuds}$, $\mathit{aretes}$ : listes, $\mathit{etape}$ : entier}
-\BlankLine
-$b_n \leftarrow \max(1,\; \lfloor|\mathit{noeuds}|/20\rfloor)$
-    \com{taille du lot de noeuds}
-$b_e \leftarrow \max(1,\; \lfloor|\mathit{aretes}|/15\rfloor)$
-    \com{taille du lot d'aretes}
-$f_n \leftarrow \lceil|\mathit{noeuds}|/b_n\rceil$
-    \com{nombre de trames pour les noeuds}
-$f_e \leftarrow \lceil|\mathit{aretes}|/b_e\rceil$
-    \com{nombre de trames pour les aretes}
-\BlankLine
-\Si{$\mathit{etape} < f_n$}{
-    \com{Phase 1 : ajout progressif des noeuds (gris)}
-    $cnt \leftarrow \min\bigl((\mathit{etape}+1)\times b_n,\;
-    |\mathit{noeuds}|\bigr)$\;
-    Dessiner noeuds$[0\,{:}\,cnt]$ en gris\;
-    Planifier \textsc{Animation}($\mathit{etape}+1$) dans 55 ms\;
-}
-\SinonSi{$\mathit{etape} < f_n + f_e$}{
-    \com{Phase 2 : ajout progressif des aretes (grises)}
-    $idx \leftarrow \mathit{etape} - f_n$\;
-    $cnt \leftarrow \min\bigl((idx+1)\times b_e,\;
-    |\mathit{aretes}|\bigr)$\;
-    Dessiner tous les noeuds + aretes$[0\,{:}\,cnt]$ en gris\;
-    Planifier \textsc{Animation}($\mathit{etape}+1$) dans 35 ms\;
-}
-\SinonSi{$\mathit{etape} = f_n + f_e$}{
-    \com{Phase 3 : application de la coloration des rôles}
-    Dessiner le graphe complet avec les couleurs de rôles\;
-    Planifier \textsc{Animation}($\mathit{etape}+1$) dans 750 ms\;
-}
-\Sinon{
-    \com{Phase 4 : mise en évidence des fraudes}
-    Dessiner le graphe avec aretes frauduleuses en orange\;
-    Ajouter les anneaux pointillés sur les noeuds suspects\;
-    Mettre à jour les statistiques et la distribution\;
-}
+    \caption{Bron-Kerbosch avec Pivot}
+    \KwIn{$G$, $R$ (résultat), $P$ (candidats), $X$ (exclus)}
+    \KwOut{Liste des cliques maximales}
+    \Si{$P = \varnothing$ \Et $X = \varnothing$}{
+        \Si{$|R| \geq 3$}{Ajouter $R$ aux résultats}
+        \Retourner
+    }
+    $u \leftarrow$ pivot dans $P \cup X$ maximisant $|P \cap N(u)|$\;
+    \Pour{chaque sommet $v$ dans $P \setminus N(u)$}{
+        BronKerbosch($G$, $R \cup \{v\}$, $P \cap N(v)$, $X \cap N(v)$)\;
+        $P \leftarrow P \setminus \{v\}$\;
+        $X \leftarrow X \cup \{v\}$\;
+    }
 \end{algorithm}
 
 \subsection{Code Python}
+\begin{lstlisting}[style=python, caption={bron\_kerbosch(...) et trouver\_cliques(...)}]
+def bron_kerbosch(graphe, R, P, X, cliques):
+    if not P and not X:
+        if len(R) >= 3:
+            cliques.append(frozenset(R))
+        return
+    
+    # Choix du pivot
+    pivot = max(P | X, key=lambda u: len(graphe[u] & P))
+    
+    for sommet in list(P - graphe[pivot]):
+        voisins = graphe[sommet]
+        bron_kerbosch(graphe, R | {sommet}, 
+                      P & voisins, X & voisins, cliques)
+        P = P - {sommet}
+        X = X | {sommet}
 
-\begin{lstlisting}[style=python,
-  caption={Animation progressive — méthode \texttt{\_animate()}}]
-def _animate(self, nodes: list, edges: list, step: int) -> None:
-    n_nd = len(nodes)
-    n_ed = len(edges)
-    # Taille des lots pour limiter le nombre de redessins
-    b_nd = max(1, n_nd // 20)
-    b_ed = max(1, n_ed // 15) if n_ed else 1
-    # Nombre de trames pour chaque phase
-    f_nd = (n_nd + b_nd - 1) // b_nd
-    f_ed = (n_ed + b_ed - 1) // b_ed if n_ed else 0
-
-    if step < f_nd:
-        # Phase 1 : ajout progressif des noeuds (gris)
-        cnt = min((step + 1) * b_nd, n_nd)
-        self._draw(nodes[:cnt], [], 'build')
-        self.set_status(f"Noeuds : {cnt} / {n_nd}")
-        self._after_id = self.root.after(
-            55, lambda: self._animate(nodes, edges, step + 1))
-
-    elif step < f_nd + f_ed:
-        # Phase 2 : ajout progressif des aretes (grises)
-        idx = step - f_nd
-        cnt = min((idx + 1) * b_ed, n_ed)
-        self._draw(nodes, edges[:cnt], 'build')
-        self.set_status(f"Aretes : {cnt} / {n_ed}")
-        self._after_id = self.root.after(
-            35, lambda: self._animate(nodes, edges, step + 1))
-
-    elif step == f_nd + f_ed:
-        # Phase 3 : coloration des roles
-        self.set_status("Application de la coloration gloutonne...")
-        self._draw(nodes, edges, 'color')
-        self._after_id = self.root.after(
-            750, lambda: self._animate(nodes, edges, step + 1))
-
-    else:
-        # Phase 4 : mise en evidence des fraudes + finalisation
-        self.set_status("Detection des fraudes en cours...")
-        self._draw(nodes, edges, 'fraud')
-        self._update_stats()
-        self.busy = False
-        self.btn_gen.config(state='normal')
-        self.btn_rc.config(state='normal')
+def trouver_cliques(graphe: dict) -> list:
+    cliques = []
+    sommets = set(graphe.keys())
+    bron_kerbosch(graphe, set(), sommets, set(), cliques)
+    return cliques
 \end{lstlisting}
 
-
-% ══════════════════════════════════════════════════════════════════════════════
-\section*{Conclusion — Pipeline complet}
-\addcontentsline{toc}{section}{Conclusion}
-% ══════════════════════════════════════════════════════════════════════════════
-
-\begin{tcolorbox}[explication, title={Récapitulatif du pipeline algorithmique}]
-Les 6 algorithmes s'enchaînent dans l'ordre suivant :
-
-\medskip
-\begin{center}
-\begin{tikzpicture}[
-  box/.style={
-    rectangle, rounded corners=5pt,
-    draw=algoborder, fill=algobg, line width=0.6pt,
-    minimum width=2.8cm, minimum height=0.9cm,
-    font=\small\sffamily\bfseries, text centered
-  },
-  arr/.style={-Stealth, thick, algoborder!70},
-]
-  \node[box] (n1) at (0,0)   {1. Génération\\G(n,p)};
-  \node[box] (n2) at (3.2,0) {2. Connexité\\BFS};
-  \node[box] (n3) at (6.4,0) {3. Coloration\\gloutonne};
-  \node[box] (n4) at (6.4,-2){4. Rôles\\$\min(\text{col},3)$};
-  \node[box] (n5) at (3.2,-2){5. Détection\\fraude};
-  \node[box] (n6) at (0,-2)  {6. Animation\\progressive};
-
-  \draw[arr] (n1) -- (n2);
-  \draw[arr] (n2) -- (n3);
-  \draw[arr] (n3) -- (n4);
-  \draw[arr] (n4) -- (n5);
-  \draw[arr] (n5) -- (n6);
-\end{tikzpicture}
-\end{center}
-
-\medskip
-\textbf{Complexités algorithmiques :}
-\begin{itemize}
-  \item Génération G(n,p) : $O(n^2)$ paires à tester
-  \item BFS connexité : $O(n + |E|)$ par appel
-  \item Coloration gloutonne : $O(n + |E|)$
-  \item Assignation des rôles : $O(n)$
-  \item Détection de fraude : $O(|E|)$
-  \item Animation : $O\!\left(\left(\frac{n}{20}+\frac{|E|}{15}\right)\cdot T_{\text{dessin}}\right)$
-\end{itemize}
+\section{Rôles et Détection de Fraude}
+\subsection{Explication}
+\begin{tcolorbox}[explication]
+    Les rôles sont assignés selon la couleur (plafonnée à 3). La fraude est détectée si :
+    \begin{enumerate}
+        \item Une arête relie directement un Consommateur (Rôle 0) et un Approvisionneur (Rôle 2).
+        \item Un nœud a un rôle Suspect (Rôle 3, issu d'une coloration élevée).
+    \end{enumerate}
 \end{tcolorbox}
 
+\subsection{Algorithme}
+\begin{algorithm}[H]
+    \caption{Détection des circuits frauduleux}
+    \KwIn{$G=(V,E)$, $\mathit{roles}[v]$}
+    \KwOut{$S_{\text{fraude}} \subseteq V$, $A_{\text{fraude}} \subseteq E$}
+    $S_{\text{fraude}} \leftarrow \varnothing$ ; $A_{\text{fraude}} \leftarrow \varnothing$\;
+    \Pour{chaque arête $(u,v) \in E$ avec $u < v$}{
+        \Si{$(\mathit{roles}[u]=0 \;\Et\; \mathit{roles}[v]=2)$ \Ou $(\mathit{roles}[u]=2 \;\Et\; \mathit{roles}[v]=0)$}{
+            $A_{\text{fraude}} \leftarrow A_{\text{fraude}} \cup \{(u,v)\}$\;
+            $S_{\text{fraude}} \leftarrow S_{\text{fraude}} \cup \{u, v\}$\;
+        }
+    }
+    \Pour{chaque sommet $v \in V$}{
+        \Si{$\mathit{roles}[v] = 3$}{
+            $S_{\text{fraude}} \leftarrow S_{\text{fraude}} \cup \{v\}$\;
+        }
+    }
+    \Retourner $S_{\text{fraude}},\; A_{\text{fraude}}$\;
+\end{algorithm}
+
+\subsection{Code Python}
+\begin{lstlisting}[style=python, caption={detecter\_fraude(graphe, roles)}]
+def detecter_fraude(graphe: dict, roles: dict) -> tuple:
+    sommets_frauduleux = set()
+    aretes_frauduleuses = set()
+    
+    for u in graphe:
+        for v in graphe[u]:
+            if u < v:
+                ru, rv = roles[u], roles[v]
+                if (ru == 0 and rv == 2) or (ru == 2 and rv == 0):
+                    aretes_frauduleuses.add((u, v))
+                    sommets_frauduleux.update([u, v])
+
+    for s, role in roles.items():
+        if role == 3:
+            sommets_frauduleux.add(s)
+
+    return sommets_frauduleux, aretes_frauduleuses
+\end{lstlisting}
+
+\section{Disposition Aléatoire}
+\subsection{Explication}
+\begin{tcolorbox}[explication]
+    Les nœuds sont placés aléatoirement dans un rectangle défini. Une tentative de contrôle de distance minimale est effectuée pour éviter la superposition totale des nœuds, bien que cela reste une disposition force-directed simplifiée.
+\end{tcolorbox}
+
+\subsection{Code Python}
+\begin{lstlisting}[style=python, caption={disposition\_aleatoire(graphe)}]
+def disposition_aleatoire(graphe, largeur=2.0, hauteur=2.0, dist_min=0.08):
+    positions = {}
+    demi_l = largeur / 2
+    demi_h = hauteur / 2
+    
+    for sommet in graphe:
+        meilleure_pos = None
+        meilleure_dist = -1.0
+        
+        for _ in range(30): # Max tentatives
+            x = random.uniform(-demi_l, demi_l)
+            y = random.uniform(-demi_h, demi_h)
+            
+            if not positions:
+                meilleure_pos = (x, y)
+                break
+            
+            # Calcul distance min aux autres
+            dist_min_loc = min(
+                ((x - px)**2 + (y - py)**2)**0.5 
+                for px, py in positions.values()
+            )
+            
+            if dist_min_loc >= dist_min:
+                meilleure_pos = (x, y)
+                break
+                
+            if dist_min_loc > meilleure_dist:
+                meilleure_dist = dist_min_loc
+                meilleure_pos = (x, y)
+                
+        positions[sommet] = meilleure_pos
+    return positions
+\end{lstlisting}
 \end{document}
